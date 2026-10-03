@@ -29,6 +29,8 @@ Important interpretation:
 
 ## Power BI Dashboard
 
+![PlantOps AI Power BI Dashboard](reports/plantops_powerbi_dashboard.png)
+
 The Power BI dashboard is the final consumption layer of the project.
 
 Dashboard name:
