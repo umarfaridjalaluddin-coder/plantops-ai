@@ -69,4 +69,4 @@ LOAD_ALERT_PCT = 95.0
 # ---------------------------------------------------------------------------
 
 MEDIUM_RISK_THRESHOLD = 0.30
-HIGH_RISK_THRESHOLD = 0.65
+HIGH_RISK_THRESHOLD = 0.60
