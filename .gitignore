@@ -31,3 +31,7 @@ reports/metrics/*
 *.egg-info/
 build/
 dist/
+
+# Power BI PBIP local/cache files
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
