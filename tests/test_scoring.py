@@ -62,3 +62,25 @@ def test_risk_bands_returns_one_band_per_score() -> None:
     bands = risk_bands(scores)
 
     assert bands.tolist() == ["LOW", "MEDIUM", "HIGH"]
+
+
+def test_calibration_diagnostics_returns_valid_outputs() -> None:
+    from plantops_ai.explainability import calibration_diagnostics
+
+    y_true = np.array([0, 0, 0, 1, 0, 1, 0, 1])
+    probabilities = np.array(
+        [0.05, 0.10, 0.20, 0.80, 0.30, 0.70, 0.40, 0.90]
+    )
+
+    brier_score, table = calibration_diagnostics(
+        y_true,
+        probabilities,
+        n_bins=4,
+    )
+
+    assert 0.0 <= brier_score <= 1.0
+    assert not table.empty
+    assert list(table.columns) == [
+        "mean_predicted_score",
+        "observed_failure_rate",
+    ]

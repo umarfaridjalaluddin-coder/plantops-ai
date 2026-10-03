@@ -88,3 +88,43 @@ def test_hist_gradient_boosting_trains_and_predicts_probabilities() -> None:
     assert len(probabilities) == len(validation_df)
     assert np.all(probabilities >= 0.0)
     assert np.all(probabilities <= 1.0)
+
+
+def test_logistic_coefficients_match_transformed_features() -> None:
+    from plantops_ai.explainability import logistic_feature_coefficients
+    from plantops_ai.features import split_train_validation_test_by_equipment
+
+    df = generate_synthetic_data()
+    train_df, _, _ = split_train_validation_test_by_equipment(df)
+
+    X_train, y_train = build_model_frame(train_df)
+
+    model = build_logistic_regression_pipeline()
+    model.fit(X_train, y_train)
+
+    coefficients = logistic_feature_coefficients(model)
+
+    assert not coefficients.empty
+    assert set(coefficients.columns) == {
+        "feature",
+        "coefficient",
+        "absolute_coefficient",
+    }
+    assert len(coefficients) == len(
+        model.named_steps["preprocessing"].get_feature_names_out()
+    )
+
+
+def test_frozen_model_metadata_contract() -> None:
+    from plantops_ai.run_pipeline import train_frozen_model
+
+    _, metadata = train_frozen_model()
+
+    assert metadata["model_version"] == "plantops-lr-v1"
+    assert metadata["model_type"] == "LogisticRegression"
+    assert metadata["score_interpretation"] == "uncalibrated_risk_score"
+    assert metadata["decision_support_only"] is True
+    assert metadata["synthetic_data"] is True
+    assert metadata["training_rows"] == 1800
+    assert metadata["validation_rows"] == 600
+    assert metadata["test_rows"] == 600
