@@ -1,0 +1,5 @@
+relationship 8d4aaacb-cc1a-49ed-a0a2-5ae80a956f65
+	joinOnDateBehavior: datePartOnly
+	fromColumn: PlantOps.timestamp
+	toColumn: LocalDateTable_2035d2c3-ce0c-4d82-830c-c7993c23cc24.Date
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "PlantOps AI - Operational Risk Dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d87893d6-ba7c-45ee-a7c9-14d1d9676a3e"
+  }
+}

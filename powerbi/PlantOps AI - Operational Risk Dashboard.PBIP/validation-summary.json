@@ -1,0 +1,19 @@
+{
+  "rows": 3000,
+  "equipment_count": 100,
+  "high_risk_observations": 595,
+  "combined_alerts": 656,
+  "average_risk_score": 0.4336118257256388,
+  "ml_alerts": 595,
+  "rule_alerts": 178,
+  "model_versions": [
+    "plantops-lr-v1"
+  ],
+  "risk_bands": [
+    "HIGH",
+    "LOW",
+    "MEDIUM"
+  ],
+  "date_min": "2026-01-01",
+  "date_max": "2026-01-30"
+}

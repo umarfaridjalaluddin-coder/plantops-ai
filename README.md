@@ -1,368 +1,308 @@
-# PlantOps AI
+# PlantOps AI - Operational Risk Monitoring Prototype
 
-## AI-Assisted Operational Monitoring & Predictive Maintenance
+PlantOps AI is a synthetic, end-to-end prototype for operational risk monitoring and predictive maintenance decision support. It demonstrates how equipment observations can flow through validation, feature preparation, machine learning scoring, deterministic rule alerts, and a Power BI operations dashboard.
 
-PlantOps AI is an independent, non-confidential engineering prototype demonstrating how data engineering, deterministic operational rules, machine learning, monitoring, APIs, and analytics can support equipment-monitoring and predictive-maintenance workflows.
+This project is designed for interview and portfolio demonstration. It uses synthetic data only and is not based on confidential or production company data.
 
-> **Disclaimer:** This project uses entirely synthetic data. It is not affiliated with, deployed by, or based on operational data from Tradewinds Plantation Berhad.
+## Executive Summary
 
-## Business Problem
+PlantOps AI simulates a mill or plant operations environment with equipment telemetry and maintenance-related features. The system scores observations using a frozen logistic-regression model and combines the model output with deterministic rule alerts to prioritize equipment observations for engineer investigation.
 
-Equipment teams often need to prioritise which assets deserve investigation when operational conditions begin to change.
+Current verified dashboard reference values:
 
-PlantOps AI demonstrates the following decision-support question:
-
-> Given the operational information available for an equipment observation, what is the estimated risk that the equipment will experience a failure within the next 7 days?
-
-The system does **not** automatically stop equipment or prescribe maintenance.
-
-The intended workflow is:
-
-```text
-Operational Data
-      |
-      v
-Validation
-      |
-      +-------------------+
-      |                   |
-      v                   v
-Operational Rules     ML Risk Model
-      |                   |
-      +---------+---------+
-                |
-                v
-        Decision Support
-                |
-                v
-      Engineer Investigation
-                |
-                v
-        Decision / Action
-```
-
-## What the Prototype Includes
-
-- reproducible synthetic operational data;
-- data-quality validation;
-- equipment-grouped train/validation/test splitting;
-- deterministic operational alerts;
-- Logistic Regression risk model;
-- imbalanced-class evaluation;
-- threshold and risk-band selection;
-- model explainability;
-- calibration diagnostics;
-- model versioning and metadata;
-- reproducible model artifacts;
-- FastAPI prediction service;
-- Power BI-ready scoring export;
-- data and feature-drift monitoring;
-- AI lifecycle and governance documentation;
-- automated Ruff and pytest checks through GitHub Actions.
-
-## Synthetic Dataset
-
-The reproducible dataset contains:
-
-- 3,000 observations;
-- 100 equipment units;
-- 30 daily observations per unit;
-- 5 equipment types;
-- 44 synthetic positive failure labels;
-- approximately 1.47% overall positive prevalence.
-
-Equipment types:
-
-- PUMP
-- MOTOR
-- CONVEYOR
-- PRESS
-- BOILER_FEED
-
-Example operational features include temperature, vibration, pressure, motor current, runtime, maintenance age, and equipment load.
-
-## ML Design
-
-### Target
-
-`failure_next_7d`
-
-### Prediction horizon
-
-7 days.
-
-### Leakage control
-
-Equipment units are separated across development partitions:
-
-| Partition | Rows | Equipment |
-|---|---:|---:|
-| Train | 1,800 | 60 |
-| Validation | 600 | 20 |
-| Test | 600 | 20 |
-
-There is no equipment overlap between these partitions.
-
-### Model
-
-Frozen model version:
-
-`plantops-lr-v1`
-
-The selected model is a class-weighted Logistic Regression pipeline.
-
-A HistGradientBoosting candidate was also evaluated during model selection.
-
-### Risk bands
-
-- LOW: `< 0.30`
-- MEDIUM: `0.30 to < 0.60`
-- HIGH: `>= 0.60`
-
-These are prototype decision thresholds, not industrial safety limits.
-
-## Final Locked Holdout Results
-
-The final test set contains 600 observations from 20 unseen equipment units and 10 positive synthetic labels.
-
-| Metric | Result |
+| Metric | Value |
 |---|---:|
-| ROC-AUC | 0.7473 |
-| PR-AUC | 0.0523 |
-| Precision | 0.0364 |
-| Recall | 0.4000 |
-| F1 | 0.0667 |
-| True Positive | 4 |
-| False Positive | 106 |
-| False Negative | 6 |
-| True Negative | 484 |
+| Equipment assets | 100 |
+| Total observations | 3,000 |
+| High-risk observations | 595 |
+| ML alerts | 595 |
+| Rule alerts | 178 |
+| Combined alerts | 656 |
+| Average risk score | 0.4336 |
 
-These results demonstrate ranking signal, but also a substantial false-positive burden.
+Important interpretation:
 
-The prototype should therefore be interpreted as an engineering and decision-support demonstration, **not a production-ready predictive-maintenance model**.
+- These are full synthetic dataset dashboard counts.
+- They are visualization and decision-support references.
+- They are not holdout model-performance metrics.
+- Risk scores are uncalibrated and must not be interpreted as literal failure probabilities.
 
-## Important Score Interpretation
+## Power BI Dashboard
 
-Because the Logistic Regression model uses class weighting, its output is not calibrated to the real failure prevalence.
+The Power BI dashboard is the final consumption layer of the project.
 
-The output is therefore called:
-
-**risk score**
-
-rather than:
-
-**failure probability**
-
-Production calibration would require substantially more reliable labelled failure data and an appropriately separated calibration process.
-
-## Rules + ML
-
-PlantOps AI combines two complementary approaches.
-
-Deterministic prototype rules identify known threshold conditions such as:
-
-- temperature >= 90 C;
-- vibration >= 6 mm/s;
-- load >= 95%.
-
-The ML model identifies multivariate patterns across several measurements.
-
-The prototype thresholds are illustrative assumptions and are not claimed to represent TPB or universal equipment limits.
-
-Neither mechanism automatically initiates a safety-critical action.
-
-## API
-
-FastAPI provides:
+Dashboard name:
 
 ```text
-GET  /health
-GET  /model-info
-GET  /equipment
-POST /predict
+PlantOps AI - Operational Risk Dashboard
 ```
 
-Example response:
+Main report page:
 
-```json
-{
-  "model_version": "plantops-lr-v1",
-  "risk_score": 0.19105406080358228,
-  "risk_band": "LOW",
-  "ml_alert": false,
-  "rule_alert": false,
-  "decision_support_only": true,
-  "score_interpretation": "uncalibrated_risk_score"
-}
+```text
+Operational Risk Overview
 ```
 
-## Power BI Layer
+Dashboard interface:
 
-The project generates:
+```text
+PlantOps AI | Operations Risk Command Center
+```
 
-`data/processed/plantops_powerbi.csv`
+The dashboard includes:
 
-The current reproducible export contains 3,000 observations and 20 columns.
+- KPI cards for equipment fleet, high-risk events, total alerts, and average risk index
+- Slicers for asset type, asset ID, risk band, and observation date
+- Risk distribution by band
+- Alert pressure by asset type
+- Average risk trend over time
+- Prioritized equipment investigation queue
+- Visible decision-support disclaimer
 
-Suggested dashboard views include:
+Open the PBIP in Power BI Desktop:
 
-- equipment count;
-- high-risk observations;
-- combined alerts;
-- average risk score;
-- risk-band distribution;
-- equipment-type comparison;
-- equipment-level operating trends.
+```text
+\\wsl.localhost\Ubuntu\home\umarfarid\projects\plantops-ai\powerbi\PlantOps AI - Operational Risk Dashboard.PBIP\PlantOps AI - Operational Risk Dashboard.pbip
+```
 
-See [`powerbi/README.md`](powerbi/README.md).
+After opening, click:
 
-## Monitoring
+```text
+Refresh now
+```
 
-The monitoring layer demonstrates:
+If Power BI cannot locate the CSV source, update the `CsvPath` parameter to:
 
-- missing-value monitoring;
-- duplicate detection;
-- equipment coverage;
-- feature drift using PSI;
-- risk-score distribution;
-- risk-band distribution;
-- ML alert rate;
-- rule alert rate;
-- combined alert rate.
+```text
+\\wsl.localhost\Ubuntu\home\umarfarid\projects\plantops-ai\data\processed\plantops_powerbi.csv
+```
 
-Drift is treated as an **investigation signal**, not an automatic retraining trigger.
+Equivalent WSL path:
 
-## Reproduce the Project
+```text
+/home/umarfarid/projects/plantops-ai/data/processed/plantops_powerbi.csv
+```
 
-### 1. Create a Python 3.12 environment
+## Project Architecture
 
-Example:
+High-level flow:
+
+```text
+Synthetic equipment data
+        |
+        v
+Data validation and feature preparation
+        |
+        v
+Frozen ML model scoring
+        |
+        v
+Rule-based alert logic
+        |
+        v
+Combined risk and alert export
+        |
+        v
+Power BI operations dashboard
+```
+
+The system keeps the engineer in the loop. A high-risk score or alert prioritizes an observation for review; it does not automatically prescribe maintenance or shut down equipment.
+
+## Model and Scoring Notes
+
+Frozen model:
+
+```text
+plantops-lr-v1
+```
+
+Alert threshold:
+
+```text
+0.60
+```
+
+Risk bands are generated by the existing backend logic and should remain unchanged for reproducible dashboard verification.
+
+Do not alter the frozen Python/ML backend, the model version, the alert threshold, or risk-band definitions when reproducing the dashboard.
+
+## Data
+
+Primary Power BI export:
+
+```text
+data/processed/plantops_powerbi.csv
+```
+
+Current generated dataset:
+
+- 3,000 observations
+- 100 synthetic equipment units
+- 5 equipment types
+- 20 columns
+- Model version: `plantops-lr-v1`
+
+Key fields include:
+
+- `timestamp`
+- `equipment_id`
+- `equipment_type`
+- `temperature_c`
+- `vibration_mm_s`
+- `pressure_bar`
+- `motor_current_a`
+- `runtime_hours`
+- `days_since_maintenance`
+- `load_pct`
+- `failure_next_7d`
+- `risk_score`
+- `risk_band`
+- `ml_alert`
+- `rule_alert`
+- `combined_alert`
+- `model_version`
+- `score_interpretation`
+- `decision_support_only`
+- `synthetic_data`
+
+## Power BI Measures
+
+The dashboard preserves the following semantic model measures:
+
+```DAX
+Equipment Count =
+DISTINCTCOUNT(PlantOps[equipment_id])
+
+High Risk Observations =
+CALCULATE(
+    COUNTROWS(PlantOps),
+    PlantOps[risk_band] = "HIGH"
+)
+
+Combined Alerts =
+CALCULATE(
+    COUNTROWS(PlantOps),
+    PlantOps[combined_alert] = TRUE()
+)
+
+Average Risk Score =
+AVERAGE(PlantOps[risk_score])
+
+ML Alerts =
+CALCULATE(
+    COUNTROWS(PlantOps),
+    PlantOps[ml_alert] = TRUE()
+)
+
+Rule Alerts =
+CALCULATE(
+    COUNTROWS(PlantOps),
+    PlantOps[rule_alert] = TRUE()
+)
+
+Total Observations =
+COUNTROWS(PlantOps)
+```
+
+Expected measure values after refresh:
+
+```text
+Equipment Count: 100
+High Risk Observations: 595
+Combined Alerts: 656
+Average Risk Score: 0.4336
+ML Alerts: 595
+Rule Alerts: 178
+Total Observations: 3000
+```
+
+## Repository Structure
+
+```text
+.
+├── data/
+│   └── processed/
+│       └── plantops_powerbi.csv
+├── docs/
+├── models/
+├── powerbi/
+│   ├── PlantOps AI - Operational Risk Dashboard.pbix
+│   ├── PlantOps AI - Operational Risk Dashboard.PBIP/
+│   └── README.md
+├── reports/
+├── src/
+├── tests/
+├── README.md
+├── pyproject.toml
+└── requirements.txt
+```
+
+## Setup
+
+Create or activate the Python environment:
 
 ```bash
-python3.12 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### 2. Install dependencies
+Install the package in editable mode if needed:
 
 ```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -m pip install -e .
+pip install -e .
 ```
 
-### 3. Generate synthetic data
+## Generate Power BI Export
 
-```bash
-python -m plantops_ai.generate_data
-```
-
-### 4. Build the frozen model artifacts
-
-```bash
-python -m plantops_ai.run_pipeline
-```
-
-### 5. Generate the Power BI export
+Generate the dashboard dataset:
 
 ```bash
 python -m plantops_ai.powerbi_export
 ```
 
-### 6. Run quality checks
-
-```bash
-ruff check src tests
-pytest -q
-```
-
-The current verified test suite contains **49 tests**.
-
-## Run the API
-
-After generating the data and model artifacts:
-
-```bash
-uvicorn plantops_ai.api:app --host 127.0.0.1 --port 8000
-```
-
-Swagger/OpenAPI documentation is then available through the FastAPI `/docs` endpoint.
-
-## Reproducibility
-
-Generated runtime artifacts are intentionally excluded from Git, including:
-
-- synthetic CSV data;
-- trained model artifacts;
-- model metadata;
-- metrics files;
-- Power BI export data.
-
-The pipeline regenerates them from source.
-
-GitHub Actions follows the same sequence:
+Expected output:
 
 ```text
-Checkout
-   ↓
-Python 3.12
-   ↓
-Install dependencies
-   ↓
-Generate synthetic data
-   ↓
-Build model artifacts
-   ↓
-Ruff
-   ↓
-pytest
-   ↓
-Generate Power BI export
+data/processed/plantops_powerbi.csv
 ```
 
-## Documentation
+## Run Tests
 
-Detailed documentation is available in:
+Run the test suite:
 
-- [`docs/architecture.md`](docs/architecture.md)
-- [`docs/model_card.md`](docs/model_card.md)
-- [`docs/model_selection.md`](docs/model_selection.md)
-- [`docs/ai_lifecycle.md`](docs/ai_lifecycle.md)
-- [`docs/interview_story.md`](docs/interview_story.md)
-- [`powerbi/README.md`](powerbi/README.md)
+```bash
+pytest
+```
 
-## Production Evolution
+Run formatting or linting if configured:
 
-A real implementation would first validate the organisation's actual equipment, sensor availability, failure definitions, maintenance records, operating context, and engineering requirements.
+```bash
+ruff check .
+```
 
-Potential production components could include:
+## Interview Talking Points
 
-- historian / SCADA / IoT integration;
-- batch or streaming ingestion;
-- governed operational storage;
-- orchestration;
-- authenticated services;
-- model registry;
-- CMMS/work-order integration;
-- monitoring and alerting;
-- engineer feedback;
-- controlled CI/CD and rollback.
+Use this concise explanation:
 
-Technology choices should follow the actual operational environment rather than being imposed by this prototype.
+```text
+PlantOps AI demonstrates an end-to-end decision-support pipeline for operational risk monitoring. Synthetic equipment observations are validated, scored by a frozen logistic-regression model, combined with deterministic rule alerts, and exported to Power BI for engineer investigation. The dashboard is not showing production data or holdout model performance. It shows full synthetic dataset monitoring counts for a human-in-the-loop operations workflow.
+```
 
-## Project Status
+Key points to emphasize:
 
-Core prototype complete:
+- End-to-end pipeline, not just a model notebook
+- Reproducible synthetic data
+- Frozen model version for stable demonstration
+- Clear separation between ML alerts and rule alerts
+- Human-in-the-loop decision support
+- Power BI dashboard as the operational consumption layer
 
-- data generation and validation;
-- ML development and evaluation;
-- deterministic rules;
-- explainability and calibration diagnostics;
-- reproducible model artifacts;
-- prediction API;
-- Power BI-ready export;
-- monitoring;
-- governance documentation;
-- automated CI configuration.
+## Safety and Data Disclaimer
 
-The remaining work is presentation/demo preparation and optional dashboard implementation.
+This project uses synthetic prototype data only.
+
+The dashboard and risk scores are for decision-support demonstration. They are not production recommendations, calibrated failure probabilities, or automated maintenance instructions.
+
+Do not present this project as using real company data.
+

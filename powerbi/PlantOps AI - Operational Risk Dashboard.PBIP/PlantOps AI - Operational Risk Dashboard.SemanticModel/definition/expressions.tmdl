@@ -1,0 +1,5 @@
+expression CsvPath = "\\wsl.localhost\Ubuntu\home\umarfarid\projects\plantops-ai\data\processed\plantops_powerbi.csv"
+	lineageTag: ea331fd3-aec1-4e4f-9541-abe26a1a6abb
+
+	annotation PBI_Parameter = [Name="CsvPath", Kind="Text"]
+

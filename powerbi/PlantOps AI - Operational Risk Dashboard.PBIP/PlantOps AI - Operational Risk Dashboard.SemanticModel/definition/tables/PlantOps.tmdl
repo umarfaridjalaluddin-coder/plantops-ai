@@ -1,0 +1,241 @@
+table PlantOps
+	lineageTag: 0a199213-b185-4989-8868-ba67d01d9271
+
+	measure 'Equipment Count' = DISTINCTCOUNT('PlantOps'[equipment_id])
+		formatString: 0
+		displayFolder: Verified Interview Measures
+		lineageTag: cb357ac3-1661-4e88-981e-8e8aaa7ca80e
+
+	measure 'High Risk Observations' = CALCULATE(COUNTROWS('PlantOps'), 'PlantOps'[risk_band] = "HIGH")
+		formatString: 0
+		displayFolder: Verified Interview Measures
+		lineageTag: 86fa87a6-e592-461b-b081-9336bbf5279b
+
+	measure 'Combined Alerts' = CALCULATE(COUNTROWS('PlantOps'), 'PlantOps'[combined_alert] = TRUE())
+		formatString: 0
+		displayFolder: Verified Interview Measures
+		lineageTag: 321e6ce5-a888-4aca-a40a-79e06a667fcf
+
+	measure 'Average Risk Score' = AVERAGE('PlantOps'[risk_score])
+		formatString: 0.0000
+		displayFolder: Verified Interview Measures
+		lineageTag: df34c975-ce0c-4408-ac38-3c0da46524ed
+
+	measure 'ML Alerts' = CALCULATE(COUNTROWS('PlantOps'), 'PlantOps'[ml_alert] = TRUE())
+		formatString: 0
+		displayFolder: Verified Interview Measures
+		lineageTag: 280bd7c0-bbd4-40e1-89c1-32aa166aa3f6
+
+	measure 'Rule Alerts' = CALCULATE(COUNTROWS('PlantOps'), 'PlantOps'[rule_alert] = TRUE())
+		formatString: 0
+		displayFolder: Verified Interview Measures
+		lineageTag: 29847cb9-10ae-48ef-bb87-2275de79cb46
+
+	measure 'Total Observations' = COUNTROWS('PlantOps')
+		formatString: 0
+		displayFolder: Verified Interview Measures
+		lineageTag: 1dbf26bf-5267-440e-8cfa-80a22484601c
+
+	measure 'Observation Count' = COUNTROWS('PlantOps')
+		formatString: 0
+		displayFolder: Supporting Measures
+		lineageTag: c9100d51-1d11-41b0-892f-a9673589df40
+
+	measure 'High Risk Rate' = DIVIDE([High Risk Observations], [Total Observations])
+		formatString: 0.0%
+		displayFolder: Supporting Measures
+		lineageTag: 8202b5bb-436c-49bf-b0ec-cdc37f52df1f
+
+	measure 'Combined Alert Rate' = DIVIDE([Combined Alerts], [Total Observations])
+		formatString: 0.0%
+		displayFolder: Supporting Measures
+		lineageTag: 5c1d0e41-3b78-4fa8-a357-91b82ebc2b6b
+
+	column timestamp
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: a7fb1d59-ce6b-4ffe-8142-cd4da297b6d6
+		summarizeBy: none
+		sourceColumn: timestamp
+
+		variation Variation
+			isDefault
+			relationship: 8d4aaacb-cc1a-49ed-a0a2-5ae80a956f65
+			defaultHierarchy: LocalDateTable_2035d2c3-ce0c-4d82-830c-c7993c23cc24.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column equipment_id
+		dataType: string
+		lineageTag: da8087a1-40a9-460d-b28f-043b9982702f
+		summarizeBy: none
+		sourceColumn: equipment_id
+
+	column equipment_type
+		dataType: string
+		lineageTag: 3a9448c1-3ff3-46e3-948e-b004c74b4f66
+		summarizeBy: none
+		sourceColumn: equipment_type
+
+	column temperature_c
+		dataType: double
+		formatString: 0.00
+		lineageTag: 715b0499-f87b-47d0-bda9-278f9862fb1c
+		summarizeBy: sum
+		sourceColumn: temperature_c
+
+		annotation SummarizationSetBy = Automatic
+
+	column vibration_mm_s
+		dataType: double
+		formatString: 0.00
+		lineageTag: 6de59ca3-d431-4241-beb5-891d31789de2
+		summarizeBy: sum
+		sourceColumn: vibration_mm_s
+
+		annotation SummarizationSetBy = Automatic
+
+	column pressure_bar
+		dataType: double
+		formatString: 0.00
+		lineageTag: 58119289-5428-47a0-a2a4-d68b968544d5
+		summarizeBy: sum
+		sourceColumn: pressure_bar
+
+		annotation SummarizationSetBy = Automatic
+
+	column motor_current_a
+		dataType: double
+		formatString: 0.00
+		lineageTag: a55352cc-c970-4dec-b302-920d80349f26
+		summarizeBy: sum
+		sourceColumn: motor_current_a
+
+		annotation SummarizationSetBy = Automatic
+
+	column runtime_hours
+		dataType: double
+		formatString: 0.00
+		lineageTag: 26c529d9-94d4-489f-a5ae-3c833add98b1
+		summarizeBy: sum
+		sourceColumn: runtime_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_since_maintenance
+		dataType: int64
+		lineageTag: fb17dfed-c3b8-4f5c-90a2-31d320c7734c
+		summarizeBy: sum
+		sourceColumn: days_since_maintenance
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: e753dabf-7ad8-487a-9d53-5e3ff781cd43
+		summarizeBy: sum
+		sourceColumn: load_pct
+
+		annotation SummarizationSetBy = Automatic
+
+	column failure_next_7d
+		dataType: int64
+		lineageTag: a8b51edb-a7ad-459b-a3cc-26c5b5d9a6e7
+		summarizeBy: sum
+		sourceColumn: failure_next_7d
+
+		annotation SummarizationSetBy = Automatic
+
+	column risk_score
+		dataType: double
+		formatString: 0.0000
+		lineageTag: 0bc8f646-6504-4af4-91a3-76b14fbf1bcc
+		summarizeBy: sum
+		sourceColumn: risk_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column risk_band
+		dataType: string
+		lineageTag: b88dac0c-34c1-4fc0-a049-edb8154c5128
+		summarizeBy: none
+		sourceColumn: risk_band
+
+	column ml_alert
+		dataType: boolean
+		lineageTag: 67f790cd-cb2b-438e-a30f-ca9c5706af64
+		summarizeBy: none
+		sourceColumn: ml_alert
+
+	column rule_alert
+		dataType: boolean
+		lineageTag: 89d5fdd8-20de-4167-bfeb-f5b5427faaf1
+		summarizeBy: none
+		sourceColumn: rule_alert
+
+	column combined_alert
+		dataType: boolean
+		lineageTag: cdeae69d-345a-4fa7-8470-d1a6bce1ec81
+		summarizeBy: none
+		sourceColumn: combined_alert
+
+	column model_version
+		dataType: string
+		lineageTag: 13f2dc79-1651-465c-a52a-0215369a7015
+		summarizeBy: none
+		sourceColumn: model_version
+
+	column score_interpretation
+		dataType: string
+		lineageTag: db9946e7-57f8-4c35-97bf-3159326c60aa
+		summarizeBy: none
+		sourceColumn: score_interpretation
+
+	column decision_support_only
+		dataType: boolean
+		lineageTag: 133e913b-b8dd-4568-99c7-6f588abf9f7b
+		summarizeBy: none
+		sourceColumn: decision_support_only
+
+	column synthetic_data
+		dataType: boolean
+		lineageTag: b0911581-3ccd-4d5b-8e94-503f912fc0e0
+		summarizeBy: none
+		sourceColumn: synthetic_data
+
+	partition PlantOps = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CsvPath), [Delimiter=",", Columns=20, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {
+				        {"timestamp", type date},
+				        {"equipment_id", type text},
+				        {"equipment_type", type text},
+				        {"temperature_c", type number},
+				        {"vibration_mm_s", type number},
+				        {"pressure_bar", type number},
+				        {"motor_current_a", type number},
+				        {"runtime_hours", type number},
+				        {"days_since_maintenance", Int64.Type},
+				        {"load_pct", type number},
+				        {"failure_next_7d", Int64.Type},
+				        {"risk_score", type number},
+				        {"risk_band", type text},
+				        {"ml_alert", type logical},
+				        {"rule_alert", type logical},
+				        {"combined_alert", type logical},
+				        {"model_version", type text},
+				        {"score_interpretation", type text},
+				        {"decision_support_only", type logical},
+				        {"synthetic_data", type logical}
+				    })
+				in
+				    #"Changed Type"
+
+	annotation 'Model Version' = plantops-lr-v1
+
+	annotation 'Dashboard Note' = Full-dataset dashboard counts are visualization references, not holdout model performance.
+

@@ -1,0 +1,152 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "dddddddddddddddddddd",
+  "position": {
+    "x": 418.86120996441281,
+    "y": 395.11032028469754,
+    "z": 4001,
+    "height": 230,
+    "width": 405,
+    "tabOrder": 18
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "PlantOps"
+                    }
+                  },
+                  "Property": "equipment_type"
+                }
+              },
+              "queryRef": "PlantOps.equipment_type",
+              "nativeQueryRef": "Equipment Type",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "PlantOps"
+                    }
+                  },
+                  "Property": "Combined Alerts"
+                }
+              },
+              "queryRef": "PlantOps.Combined Alerts",
+              "nativeQueryRef": "Combined Alerts",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Alerts by Asset Type'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c419a4814fd780a8b898",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "PlantOps"
+              }
+            },
+            "Property": "equipment_type"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "b8e728650e9ae3882011",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "PlantOps"
+              }
+            },
+            "Property": "Combined Alerts"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "PlantOps AI - Operational Risk Dashboard Semantic Model"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "397c4102-a991-49de-abd5-9a3329792cc4"
+  }
+}

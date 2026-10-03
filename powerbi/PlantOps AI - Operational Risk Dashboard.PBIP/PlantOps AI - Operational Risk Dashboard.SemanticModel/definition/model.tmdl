@@ -1,0 +1,18 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["PlantOps","CsvPath"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table PlantOps
+ref table DateTableTemplate_28f8602a-a858-4f1c-8a20-4ddae193f13f
+ref table LocalDateTable_2035d2c3-ce0c-4d82-830c-c7993c23cc24
+
