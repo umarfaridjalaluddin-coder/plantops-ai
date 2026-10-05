@@ -2,7 +2,7 @@
 
 PlantOps AI is a synthetic, end-to-end prototype for operational risk monitoring and predictive maintenance decision support. It demonstrates how equipment observations can flow through validation, feature preparation, machine learning scoring, deterministic rule alerts, and a Power BI operations dashboard.
 
-This project is designed for interview and portfolio demonstration. It uses synthetic data only and is not based on confidential or production company data.
+This project is an independent portfolio demonstration. It uses synthetic data only and is not based on confidential or production company data.
 
 ## Executive Summary
 
@@ -61,10 +61,10 @@ The dashboard includes:
 - Prioritized equipment investigation queue
 - Visible decision-support disclaimer
 
-Open the PBIP in Power BI Desktop:
+Open the PBIP in Power BI Desktop (path from the project folder):
 
 ```text
-\\wsl.localhost\Ubuntu\home\umarfarid\projects\plantops-ai\powerbi\PlantOps AI - Operational Risk Dashboard.PBIP\PlantOps AI - Operational Risk Dashboard.pbip
+powerbi\PlantOps AI - Operational Risk Dashboard.PBIP\PlantOps AI - Operational Risk Dashboard.pbip
 ```
 
 After opening, click:
@@ -76,13 +76,13 @@ Refresh now
 If Power BI cannot locate the CSV source, update the `CsvPath` parameter to:
 
 ```text
-\\wsl.localhost\Ubuntu\home\umarfarid\projects\plantops-ai\data\processed\plantops_powerbi.csv
+data\processed\plantops_powerbi.csv
 ```
 
-Equivalent WSL path:
+Path from the project folder on Linux or WSL:
 
 ```text
-/home/umarfarid/projects/plantops-ai/data/processed/plantops_powerbi.csv
+data/processed/plantops_powerbi.csv
 ```
 
 ## Project Architecture
@@ -238,6 +238,8 @@ Total Observations: 3000
 ```
 
 ## Repository Structure
+
+The `data/` and `models/` folders are created when the pipeline runs. They are not stored in the repository.
 
 ```text
 .
