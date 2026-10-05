@@ -306,11 +306,7 @@ ruff check .
 
 ## Project Summary
 
-In short:
-
-```text
 PlantOps AI demonstrates an end-to-end decision-support pipeline for operational risk monitoring. Synthetic equipment observations are validated, scored by a frozen logistic-regression model, combined with deterministic rule alerts, and exported to Power BI for engineer investigation. The dashboard is not showing production data or holdout model performance. It shows full synthetic dataset monitoring counts for a human-in-the-loop operations workflow.
-```
 
 Key points:
 
